@@ -31,7 +31,7 @@
         dest: /app
         remote_src: yes
     - name: Download nodejs dependencies
-      ansible.builtin.shell: npm insall
+      ansible.builtin.shell: npm install
       args:
         chdir: /app
     - name: Install MySql server
