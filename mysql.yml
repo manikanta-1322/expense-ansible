@@ -11,7 +11,7 @@
     - name: Install MySql server
       ansible.builtin.dnf:
         name: mysql-community-server
-        stste: present
+        state: present
     - name: Start MySql Server
       ansible.builtin.systemd:
         name: MySql
