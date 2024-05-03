@@ -14,7 +14,7 @@
         state: present
     - name: Start MySql Server
       ansible.builtin.systemd:
-        name: MySql
+        name: mysqld
         state: present
         enabled: yes
     - name: Set MySql Password
