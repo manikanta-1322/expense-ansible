@@ -1,0 +1,48 @@
+- name: Expense backend setup
+  hosts: all
+  become: yes
+  tasks:
+    - name: Disable nodejs default version
+      ansible.builtin.shell: dnf module disable nodejs -y
+    - name: Download node js 18 version
+      ansible.builtn.shell: dnf module enable nodejs:18 -y
+    - name: install node js
+      ansible.builtin.dnf:
+        name: nodejs
+        state: present
+    - name: Copy backend service file
+      ansible.builtin.copy:
+        src: backend.service
+        dest: /etc/systemd/system/backend.service
+    - name: Add application user
+      ansible.builtin.user:
+        name: expense
+    - name: Delete Old App Content
+      ansible.builtin.file:
+        path: /app
+        state: absent
+    - name: Create new directory
+      ansible.builtin.file:
+        path: /app
+        state: directory
+    - name: Download and extract frontend content
+      ansible.builtin.unarchive:
+        src: https://expense-artifacts.s3.amazonaws.com/backend.zip
+        dest: /tmp/backend.zip
+        remote_src: yes
+    - name: Download nodejs dependencies
+      ansible.builtin.shell: npm insall
+      args:
+        chdir: /app
+    - name: Install MySql server
+      ansible.builtin.dnf:
+        name: mysql
+        state: present
+    - name: Load Schema
+      ansible.builtin.shell: mysql -h mysql-dev.manireddy.online -uroot -p${MYSQL_ROOT_PASSWORD} < /app/schema/backend.sql
+    - name: Starting backend service
+      ansible.builtin.systemd:
+        name: backend
+        state: restarted
+        enabled: yes
+        demon-reload: yes
