@@ -16,7 +16,7 @@
     app_dir: /usr/share/nginx/html
     component: frontend
 
-- name: Starting NgInx service
+- name: Start nginx Service
   ansible.builtin.systemd:
     name: nginx
     state: restarted
