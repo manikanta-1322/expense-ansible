@@ -17,7 +17,7 @@
     component: frontend
 
 - name: Start nginx Service
-  ansible.builtin.systemd:
+  ansible.builtin.service:
     name: nginx
     state: restarted
     enabled: yes
